@@ -32,7 +32,7 @@ export function SignInForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-sm">
+      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
         
         {/* Logo / título */}
         <div className="text-center mb-6">

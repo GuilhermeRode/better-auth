@@ -29,7 +29,7 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-sm">
+      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
 
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto mb-3 flex items-center justify-center">

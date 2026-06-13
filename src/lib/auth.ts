@@ -35,6 +35,17 @@ export const auth = betterAuth({
     },
   },
 
+  user: {
+    additionalFields: {},
+  },
+
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["github", "email-password"],
+    },
+  },
+
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24 * 7,
