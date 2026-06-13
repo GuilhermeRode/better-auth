@@ -1,12 +1,15 @@
-import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-  schema: "./drizzle/schema.ts",
+  schema: "./auth-schema.ts",
   out: "./drizzle/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    host: "localhost",
+    port: 5433,
+    user: "postgres",
+    password: "123456",
+    database: "better_auth_showcase",
     ssl: false,
   },
 });
