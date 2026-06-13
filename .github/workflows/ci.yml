@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Testes automatizados
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes
+        run: npm run test
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET || 'ci-test-secret' }}
+          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+          GITHUB_CLIENT_ID:     "ci-placeholder"
+          GITHUB_CLIENT_SECRET: "ci-placeholder"
+
+      - name: Cobertura de código
+        run: npm run test:coverage
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
