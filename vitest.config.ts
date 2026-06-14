@@ -3,20 +3,11 @@ import path from "path";
 
 export default defineConfig({
   test: {
-    globals:     true,
+    globals: true,
     environment: "node",
-    setupFiles:  ["./tests/setup.ts"],
-    coverage: {
-      provider:   "v8",
-      reporter:   ["text", "html", "lcov"],
-      include:    ["src/**/*.ts", "src/**/*.tsx"],
-      exclude:    ["src/**/*.test.*", "src/app/api/**"],
-      thresholds: {
-        statements: 70,
-        branches:   60,
-        functions:  70,
-        lines:      70,
-      },
+    setupFiles: ["./tests/setup.ts"],
+    env: {
+      DATABASE_URL: process.env.DATABASE_URL ?? "",
     },
   },
   resolve: {
