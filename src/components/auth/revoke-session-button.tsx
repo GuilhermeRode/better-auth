@@ -3,11 +3,11 @@
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-export function RevokeSessionButton({ sessionId }: { sessionId: string }) {
+export function RevokeSessionButton({ token }: { token: string }) {
   const router = useRouter();
 
   async function handleRevoke() {
-    await authClient.revokeSession({ token: sessionId });
+    await authClient.revokeSession({ token });
     router.refresh();
   }
 

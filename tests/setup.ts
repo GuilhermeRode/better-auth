@@ -9,7 +9,7 @@ import { beforeAll, afterAll } from "vitest";
 beforeAll(async () => {
   // Garante que variáveis de ambiente de teste existem
   process.env.BETTER_AUTH_SECRET = "test-secret-for-vitest-only";
-  process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3000";
+  process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3001";
   process.env.GITHUB_CLIENT_ID = "test-github-id";
   process.env.GITHUB_CLIENT_SECRET = "test-github-secret";
 });

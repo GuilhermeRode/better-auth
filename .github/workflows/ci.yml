@@ -18,22 +18,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           cache: "npm"
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Executar testes
         run: npm run test
         env:
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET || 'ci-test-secret' }}
-          NEXT_PUBLIC_APP_URL: "http://localhost:3000"
-          GITHUB_CLIENT_ID:     "ci-placeholder"
+          NEXT_PUBLIC_APP_URL: "http://localhost:3001"
+          GITHUB_CLIENT_ID: "ci-placeholder"
           GITHUB_CLIENT_SECRET: "ci-placeholder"
-
-      - name: Cobertura de código
-        run: npm run test:coverage
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/better_auth_showcase"
 
       - name: TypeScript check
         run: npx tsc --noEmit

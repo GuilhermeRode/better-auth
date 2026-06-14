@@ -57,16 +57,16 @@ export const auth = betterAuth({
       totpOptions: { period: 30, digits: 6 },
     }),
     organization({
-      allowUserToCreateOrganization: true,
-      organizationLimit: 5,
-      membershipLimit: 100,
-    }),
+  allowUserToCreateOrganization: true,
+  organizationLimit: 5,
+  membershipLimit: 100,
+}),
     admin({ impersonationSessionDuration: 60 * 60 }),
     openAPI(),
   ],
 
   rateLimit: { window: 60, max: 20, storage: "memory" },
-  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"],
+  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001"],
 });
 
 export type Session = typeof auth.$Infer.Session;

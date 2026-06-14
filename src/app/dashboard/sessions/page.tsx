@@ -53,7 +53,7 @@ export default async function SessionsPage() {
                 </p>
               </div>
               {s.id !== session.session.id && (
-                <RevokeSessionButton sessionId={s.id} />
+                <RevokeSessionButton token={s.token} />
               )}
             </div>
           ))}
