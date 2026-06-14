@@ -49,8 +49,8 @@ jobs:
           BETTER_AUTH_SECRET: "ci-test-secret-longo-o-suficiente-para-funcionar"
           BETTER_AUTH_URL: "http://localhost:3001"
           NEXT_PUBLIC_APP_URL: "http://localhost:3001"
-          GITHUB_CLIENT_ID: "ci-placeholder"
-          GITHUB_CLIENT_SECRET: "ci-placeholder"
+          AUTH_GITHUB_CLIENT_ID: "ci-placeholder"
+          AUTH_GITHUB_CLIENT_SECRET: "ci-placeholder"
           DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/better_auth_showcase"
 
       - name: TypeScript check
