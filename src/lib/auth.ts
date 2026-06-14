@@ -5,19 +5,21 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { twoFactor, organization, admin, openAPI } from "better-auth/plugins";
 import * as schema from "../../auth-schema";
 
-const pool = new Pool({
-  host: "localhost",
-  port: 5433,
-  user: "postgres",
-  password: "123456",
-  database: "better_auth_showcase",
-  ssl: false,
-});
+const pool = process.env.DATABASE_URL
+  ? new Pool({ connectionString: process.env.DATABASE_URL, ssl: false })
+  : new Pool({
+      host: "localhost",
+      port: 5433,
+      user: "postgres",
+      password: "123456",
+      database: "better_auth_showcase",
+      ssl: false,
+    });
 
 const db = drizzle(pool, { schema });
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { 
+  database: drizzleAdapter(db, {
     provider: "pg",
     schema,
   }),
@@ -33,10 +35,6 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
-  },
-
-  user: {
-    additionalFields: {},
   },
 
   account: {
@@ -57,10 +55,10 @@ export const auth = betterAuth({
       totpOptions: { period: 30, digits: 6 },
     }),
     organization({
-  allowUserToCreateOrganization: true,
-  organizationLimit: 5,
-  membershipLimit: 100,
-}),
+      allowUserToCreateOrganization: true,
+      organizationLimit: 5,
+      membershipLimit: 100,
+    }),
     admin({ impersonationSessionDuration: 60 * 60 }),
     openAPI(),
   ],

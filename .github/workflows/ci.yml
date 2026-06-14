@@ -11,6 +11,21 @@ jobs:
     name: Testes automatizados
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: better_auth_showcase
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,10 +38,16 @@ jobs:
       - name: Instalar dependências
         run: npm install --legacy-peer-deps
 
+      - name: Aplicar schema no banco
+        run: npx drizzle-kit push
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/better_auth_showcase"
+
       - name: Executar testes
         run: npm run test
         env:
           BETTER_AUTH_SECRET: "ci-test-secret-longo-o-suficiente-para-funcionar"
+          BETTER_AUTH_URL: "http://localhost:3001"
           NEXT_PUBLIC_APP_URL: "http://localhost:3001"
           GITHUB_CLIENT_ID: "ci-placeholder"
           GITHUB_CLIENT_SECRET: "ci-placeholder"
