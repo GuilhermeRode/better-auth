@@ -2,30 +2,18 @@ import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/node-postgres";
-import {
-  twoFactor,
-  organization,
-  admin,
-  openAPI,
-} from "better-auth/plugins";
+import { twoFactor, organization, admin, openAPI } from "better-auth/plugins";
 import * as schema from "../../auth-schema";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL não configurada.");
-}
-
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/better_auth_showcase",
   ssl: false,
 });
 
 const db = drizzle(pool, { schema });
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg",
-    schema,
-  }),
+  database: drizzleAdapter(db, { provider: "pg", schema }),
 
   emailAndPassword: {
     enabled: true,
@@ -53,37 +41,15 @@ export const auth = betterAuth({
   },
 
   plugins: [
-    twoFactor({
-      issuer: "BetterAuthShowcase",
-      totpOptions: {
-        period: 30,
-        digits: 6,
-      },
-    }),
-
-    organization({
-      allowUserToCreateOrganization: true,
-      organizationLimit: 5,
-      membershipLimit: 100,
-    }),
-
-    admin({
-      impersonationSessionDuration: 60 * 60,
-    }),
-
+    twoFactor({ issuer: "BetterAuthShowcase", totpOptions: { period: 30, digits: 6 } }),
+    organization({ allowUserToCreateOrganization: true, organizationLimit: 5, membershipLimit: 100 }),
+    admin({ impersonationSessionDuration: 60 * 60 }),
     openAPI(),
   ],
 
-  rateLimit: {
-    window: 60,
-    max: 20,
-    storage: "memory",
-  },
-
-  trustedOrigins: [
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001",
-  ],
+  rateLimit: { window: 60, max: 20, storage: "memory" },
+  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3001"],
 });
 
 export type Session = typeof auth.$Infer.Session;
-export type User = typeof auth.$Infer.Session.user;
+export type User    = typeof auth.$Infer.Session.user;
