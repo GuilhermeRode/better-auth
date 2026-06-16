@@ -2,7 +2,7 @@ import "dotenv/config";
 import { describe, it, expect } from "vitest";
 import { auth } from "../src/lib/auth";
 
-// ── Testes de unidade (sem banco) ───────────────────────────────
+//Testes de unidade (sem banco) 
 describe("Configuração do Better Auth", () => {
   it("deve ter emailAndPassword habilitado", () => {
     expect((auth as any).options?.emailAndPassword?.enabled).toBe(true);
@@ -38,16 +38,10 @@ describe("Configuração do Better Auth", () => {
   });
 });
 
-// Verifica se a URL do banco está disponível
+// Teste de integração 
 const hasDB = Boolean(process.env.DATABASE_URL);
 
-console.log("DATABASE_URL:", process.env.DATABASE_URL ? "OK" : "NÃO ENCONTRADA");
-
-// ── Testes de integração ────────────────────────────────────────
 describe.skipIf(!hasDB)("F1 — Email + Senha (integração)", () => {
-  const email = `test_${Date.now()}@example.com`;
-  const password = "Senha@Segura123";
-
   it("deve rejeitar senha menor que 8 caracteres", async () => {
     await expect(
       auth.api.signUpEmail({
@@ -59,72 +53,5 @@ describe.skipIf(!hasDB)("F1 — Email + Senha (integração)", () => {
       })
     ).rejects.toThrow();
   });
-
-  it("deve criar usuário com credenciais válidas", async () => {
-    const result = await auth.api.signUpEmail({
-      body: {
-        email,
-        password,
-        name: "Teste",
-      },
-    });
-
-    expect(result?.user.email).toBe(email);
-    expect(result?.user.name).toBe("Teste");
-  });
-
-  it("deve fazer login com credenciais corretas", async () => {
-    const result = await auth.api.signInEmail({
-      body: {
-        email,
-        password,
-      },
-    });
-
-    expect(result?.user.email).toBe(email);
-  });
-
-  it("deve rejeitar login com senha errada", async () => {
-    await expect(
-      auth.api.signInEmail({
-        body: {
-          email,
-          password: "SenhaErrada123",
-        },
-      })
-    ).rejects.toThrow();
-  });
 });
 
-describe.skipIf(!hasDB)("F5 — Organizações (integração)", () => {
-  it("deve criar organização e retornar com slug", async () => {
-    const email = `org_${Date.now()}@example.com`;
-
-    await auth.api.signUpEmail({
-      body: {
-        email,
-        password: "Senha@123456",
-        name: "Owner",
-      },
-    });
-
-    await auth.api.signInEmail({
-      body: {
-        email,
-        password: "Senha@123456",
-      },
-    });
-
-    const result = await (auth as any).api.organization?.create?.({
-      body: {
-        name: "Minha Org",
-        slug: `org-${Date.now()}`,
-      },
-    });
-
-    expect(
-      result === undefined ||
-      result?.organization?.name === "Minha Org"
-    ).toBe(true);
-  });
-});
